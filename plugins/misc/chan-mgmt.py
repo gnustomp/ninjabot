@@ -9,7 +9,7 @@ class Plugin(object):
 		if not self.bot.is_admin(msg.nick):
 			return
 
-		if msg.type != 1:
+		if msg.type != msg.CHANNEL:
 			# If message is not received from a channel, use RFC-style syntax.
 			if len(msg.args) < 2:
 				self.bot.notice(msg.nick, "There must be at least one channel parameter and one user parameter")
