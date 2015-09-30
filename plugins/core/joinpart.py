@@ -9,10 +9,14 @@ class Plugin(object):
 
 		if len(msg.args) == 0:
 			self.bot.notice(msg.nick, "No channels were specified.")
+			return
+
 		channels = msg.args.pop(0)
 		if len(msg.args) > 0:
 			keys = msg.args.pop(0)
-		else: keys = ""
+		else:
+			keys = ""
+
 		self.bot.irc_send('JOIN {0} {1}'.format(channels, keys))
 
 	def trigger_part(self, msg):
@@ -22,8 +26,12 @@ class Plugin(object):
 
 		if len(msg.args) == 0:
 			self.bot.notice(msg.nick, "No channels were specified.")
+			return
+
 		channels = msg.args.pop(0)
 		if len(msg.args) > 0:
 			partmsg = msg.args.pop(0)
-		else: partmsg = ""
+		else:
+			partmsg = ""
+
 		self.bot.irc_send('PART {0} {1}'.format(channels, partmsg))

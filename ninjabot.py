@@ -335,10 +335,10 @@ class Ninjabot(IRCConnection):
 		self.errors = []
 
 		# Bot admins. Authentication is handled externally (plugin)
-		self.admins = []
+		self.admins = set()
 
 		# Ignored users. Again, handled by a plugin.
-		self.ignored = []
+		self.ignored = set()
 
 		# List of storages that should be written to disk on a timer
 		self.storage = []

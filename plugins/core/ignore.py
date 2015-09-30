@@ -3,13 +3,13 @@ class Plugin(object):
 		self.bot = bot
 		self.timeouts = {}
 		if 'ignorelist' in config:
-			self.bot.ignored += config['ignorelist']
+			self.bot.ignored.update(config['ignorelist'])
 
 	def on_incoming(self, msg):
 		if msg.command == 'NICK':
 			if msg.nick in self.bot.ignored:
 				self.bot.ignored.remove(msg.nick)
-				self.bot.ignored.append(msg.body)
+				self.bot.ignored.add(msg.body)
 				if msg.body in self.timeouts:
 					self.timeouts[msg.body] = self.timeouts[msg.nick]
 				del self.timeouts[msg.nick]
@@ -21,10 +21,12 @@ class Plugin(object):
 
 		if len(msg.args) == 0:
 			self.bot.notice(msg.nick, "No nick was specified.")
+			return
 		i = msg.args.pop(0)
 		if i in self.bot.ignored:
 			self.bot.notice(msg.nick, "{0} is already ignored".format(i))
-		self.bot.ignored.append(i)
+			return
+		self.bot.ignored.add(i)
 		time = 0
 		if len(msg.args) > 0:
 			try:
@@ -45,10 +47,12 @@ class Plugin(object):
 
 		if len(msg.args) == 0:
 			self.bot.notice(msg.nick, "No nick was specified.")
+			return
 
 		person = msg.args.pop(0)
 		if not person in self.bot.ignored:
 			self.bot.notice(msg.nick, "{:s} is not on the ignore list.".format(person))
+			return
 
 		self.bot.ignored.remove(person)
 

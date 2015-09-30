@@ -8,7 +8,7 @@ class Plugin(object):
 		self.mode = config['mode'].lower()
 
 		# Clear out the bot's admins on load. Prevents carry-over on plugin reload
-		self.bot.admins = []
+		self.bot.admins = set()
 
 	def on_incoming(self, msg):
 		getattr(self, 'ns_'+self.mode)(msg)
@@ -30,7 +30,7 @@ class Plugin(object):
 		if msg.command == 'NOTICE' and msg.nick == 'NickServ' and 'STATUS' in msg.body:
 			args = msg.body.split()
 			if args[1] in self.admins and args[2] == '3':
-				self.bot.admins.append(args[1])
+				self.bot.admins.add(args[1])
 				self.bot.notice(args[1], 'You have been added as an admin.')
 			else:
 				self.bot.notice(args[1], 'You are not an admin.')
@@ -39,7 +39,7 @@ class Plugin(object):
 		if msg.command == 'NOTICE' and msg.nick == 'NickServ' and '->' in msg.body:
 			args = msg.body.split()
 			if args[2] in self.admins and args[4] == '3':
-				self.bot.admins.append(args[0])
+				self.bot.admins.add(args[0])
 				self.bot.notice(args[0], 'You have been added as an admin.')
 			else:
 				self.bot.notice(args[0], 'You are not an admin.')
@@ -57,7 +57,7 @@ class Plugin(object):
 	def trigger_deauth(self, msg):
 		'Deauths an admin, for security purposes.'
 		if msg.nick not in self.bot.admins:
-			self.bot.notice(msg.nick, 'You are not an admin')
+			self.bot.notice(msg.nick, 'You are not an admin.')
 			return
 		self.bot.admins.remove(msg.nick)
 		self.bot.notice(msg.nick, 'You have been successfully deauthed.')
