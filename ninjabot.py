@@ -230,14 +230,17 @@ class IRCConnection(object):
 	def process_line(self, line):
 		self.logger.debug(line)
 
-		message = Message(line)
+		if line:
+			message = Message(line)
 
-		# Handle PINGs ASAP
-		if message.command == 'PING':
-			self.pong(message.body)
-			return
+			# Handle PINGs ASAP
+			if message.command == 'PING':
+				self.pong(message.body)
+				return
 
-		self.message_received(message)
+			self.message_received(message)
+		else:
+			raise RuntimeError("disconnect, pls fix")
 
 	def message_received(self, message):
 		raise NotImplementedError()
@@ -364,7 +367,11 @@ class Ninjabot(IRCConnection):
 			self.join(channel)
 		while self.connected:
 			message = yield from self.reader.readline()
-			self.process_line(message.decode('utf-8', 'ignore').rstrip())
+			if not message:
+				self.connected = False
+				self.disconnect('Connection reset by peer.')
+			else:
+				self.process_line(message.decode('utf-8', 'ignore').rstrip())
 
 	def handle_close(self):
 		self.write_storage()
