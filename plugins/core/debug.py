@@ -23,7 +23,7 @@ class Plugin(object):
 			if err in self.cache:
 				m = self.cache[err]
 			else:
-				m = self.paste.write(self.bot.errors[err])
+				m = self.paste.write(self.bot.errors[err], language='py3tb')
 				if err > 0 and 'err' not in m:
 					self.cache[err] = m
 			self.bot.notice(msg.nick, 'Error report: ' + m)
