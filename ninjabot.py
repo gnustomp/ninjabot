@@ -240,7 +240,7 @@ class IRCConnection(object):
 
 			self.message_received(message)
 		else:
-			raise RuntimeError("disconnect, pls fix")
+			self.disconnect('Connection reset by peer')
 
 	def message_received(self, message):
 		raise NotImplementedError()
