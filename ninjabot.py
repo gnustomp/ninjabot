@@ -200,8 +200,8 @@ class IRCConnection(object):
 
 			# Sanitise any unruly characters in output and terminate the message
 			message = self.irc_sanitise(message)
-			self.logger.debug('--> ' + message)
 			message += '\r\n'
+			self.logger.debug('--> ' + message)
 
 			# Convert the message to a bytes buffer for the socket
 			message_bytes = bytes(message, 'UTF-8')
