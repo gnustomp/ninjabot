@@ -206,7 +206,8 @@ class IRCConnection(object):
 			message_bytes = bytes(message, 'UTF-8')
 			try:
 				self.writer.write(message_bytes)
-			except:
+			except Exception as e:
+				self.logger.error(e)
 				self.disconnect('Connection reset by peer.')
 			self.logger.debug('SENT: ' + message.encode('ascii', 'backslashreplace').decode())
 
@@ -381,7 +382,7 @@ class Ninjabot(IRCConnection):
 		# Catch any errors from the plugins
 		try:
 			self.on_incoming(msg)
-		except:
+		except Exception:
 			self.report_error()
 
 	def on_incoming(self, msg):
@@ -522,7 +523,7 @@ class Ninjabot(IRCConnection):
 			# Not pretty, but best I can be assed to do.
 			# Anything more requires tomfoolery with sys.modules
 			module = importlib.reload(import_module(path))
-		except:
+		except Exception:
 			self.logger.info("Error while loading {0}. Skipping. Trace:".format(path))
 			self.report_error()
 			return
