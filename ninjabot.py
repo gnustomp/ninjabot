@@ -231,13 +231,12 @@ class IRCConnection(object):
 		self.logger.debug(line)
 
 		if line:
-			message = Message(line)
-
 			# Handle PINGs ASAP
-			if message.command == 'PING':
-				self.pong(message.body)
+			if line.startswith('PING '):
+				self.pong(line[5:])
 				return
 
+			message = Message(line)
 			self.message_received(message)
 		else:
 			self.disconnect('Connection reset by peer')
