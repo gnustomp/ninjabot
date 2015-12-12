@@ -200,6 +200,7 @@ class IRCConnection(object):
 
 			# Sanitise any unruly characters in output and terminate the message
 			message = self.irc_sanitise(message)
+			self.logger.debug('--> ' + message)
 			message += '\r\n'
 
 			# Convert the message to a bytes buffer for the socket
@@ -209,7 +210,6 @@ class IRCConnection(object):
 			except Exception as e:
 				self.logger.error(e)
 				self.disconnect('Connection reset by peer.')
-			self.logger.debug('SENT: ' + message.encode('ascii', 'backslashreplace').decode())
 
 		# Else, queue it
 		else:
